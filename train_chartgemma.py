@@ -98,7 +98,7 @@ def train_collate_fn(examples):
         padding=True,
         truncation="only_second",
         max_length=MAX_LENGTH,
-        tokenize_newline_separately=False,
+        # tokenize_newline_separately=False,
     )
 
     input_ids = inputs["input_ids"]
@@ -115,7 +115,7 @@ def train_collate_fn(examples):
         padding=True,
         truncation="only_second",
         max_length=MAX_LENGTH,
-        tokenize_newline_separately=False,
+        # tokenize_newline_separately=False,
     )
     rot_pixel_values = inputs["pixel_values"]
 
@@ -156,12 +156,14 @@ def eval_collate_fn(examples):
 
 
 class ChartGemmaModelPLModule(L.LightningModule):
-    def __init__(self, config, processor, model):
+    def __init__(self, config, processor, model, train_dataset, val_dataset):
         super().__init__()
         self.config = config
         self.processor = processor
         self.model = model
         self.batch_size = config.get("batch_size")
+        self.train_dataset = train_dataset
+        self.val_dataset = val_dataset
 
     def training_step(self, batch, batch_idx):
 
@@ -324,13 +326,13 @@ model = get_peft_model(model, lora_config)
 
 processor = AutoProcessor.from_pretrained("ahmed-masry/chartgemma")
 
-train_dataset = ChartGemmaDataset("ahmed-masry/ChartQA", split="train")
-val_dataset = ChartGemmaDataset("ahmed-masry/ChartQA", split="val")
+train_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
+val_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
 
 config = {
     "max_epochs": 2,
     # "val_check_interval": 0.2, # how many times we want to validate during an epoch
-    "check_val_every_n_epoch": 1,
+    "check_val_every_n_epoch": None,
     "gradient_clip_val": 1.0,
     "accumulate_grad_batches": 8,
     "accumulate_grad_batches": 1,
