@@ -322,7 +322,6 @@ lora_config = LoraConfig(
 model = prepare_model_for_kbit_training(model)
 model = get_peft_model(model, lora_config)
 
-dataset = load_dataset("ahmed-masry/ChartQA")
 processor = AutoProcessor.from_pretrained("ahmed-masry/chartgemma")
 
 train_dataset = ChartGemmaDataset("ahmed-masry/ChartQA", split="train")
