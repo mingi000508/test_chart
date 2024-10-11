@@ -68,8 +68,8 @@ class ChartGemmaDataset(Dataset):
 
         # inputs
         image = Image.open(BytesIO(sample["image"])).convert("RGB")
-        target_sequence = sample["label"]
-        input_sequence = sample["query"]
+        target_sequence = sample["output"]
+        input_sequence = sample["input"]
         return image, input_sequence, target_sequence
 
 
