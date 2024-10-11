@@ -201,9 +201,6 @@ class ChartGemmaModelPLModule(L.LightningModule):
         # loss weight is default 1:1
         loss = loss + kl_loss
 
-        import pdb
-
-        pdb.set_trace()
         self.log("train_loss", loss)
 
         return loss
