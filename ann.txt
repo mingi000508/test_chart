@@ -1,0 +1,188 @@
+- imagename: 30.png
+  label: '50'
+  query: What was the average ticket price for Nashville Predators games in the 2011/12
+    season?
+- imagename: 30_rot90.png
+  label: '50'
+  query: What was the average ticket price for Nashville Predators games in the 2011/12
+    season?
+- imagename: 30.png
+  label: '25'
+  query: How much did the ticket price increase from the 2005/06 season to the 2014/15
+    season?
+- imagename: 30_rot90.png
+  label: '25'
+  query: How much did the ticket price increase from the 2005/06 season to the 2014/15
+    season?
+- imagename: 30.png
+  label: 2012/13
+  query: In which season did the average ticket price first reach 60 U.S. dollars?
+- imagename: 30_rot90.png
+  label: 2012/13
+  query: In which season did the average ticket price first reach 60 U.S. dollars?
+- imagename: 78.png
+  label: Singapore
+  query: Which country had the highest trade value with India in FY 2019?
+- imagename: 78_rot90.png
+  label: Singapore
+  query: Which country had the highest trade value with India in FY 2019?
+- imagename: 78.png
+  label: '22000'
+  query: What was the approximate trade value with Indonesia in FY 2019?
+- imagename: 78_rot90.png
+  label: '22000'
+  query: What was the approximate trade value with Indonesia in FY 2019?
+- imagename: 78.png
+  label: '5'
+  query: How many countries had a trade value below 10,000 million U.S. dollars in
+    FY 2019?
+- imagename: 78_rot90.png
+  label: '5'
+  query: How many countries had a trade value below 10,000 million U.S. dollars in
+    FY 2019?
+- imagename: 255.png
+  label: '2017'
+  query: In which year did the number of employees first reach 4,500?
+- imagename: 255_rot90.png
+  label: '2017'
+  query: In which year did the number of employees first reach 4,500?
+- imagename: 255.png
+  label: '3500'
+  query: What was the lowest number of employees between 2009 and 2019?
+- imagename: 255_rot90.png
+  label: '3500'
+  query: What was the lowest number of employees between 2009 and 2019?
+- imagename: 255.png
+  label: '8'
+  query: How many years had an employee count above 4,000?
+- imagename: 255_rot90.png
+  label: '8'
+  query: How many years had an employee count above 4,000?
+- imagename: 778.png
+  label: 2004/05
+  query: In which year was the highest number of recorded crime offences in Scotland?
+- imagename: 778_rot90.png
+  label: 2004/05
+  query: In which year was the highest number of recorded crime offences in Scotland?
+- imagename: 778.png
+  label: '250'
+  query: What was the approximate number of recorded crime offences in 2019/20?
+- imagename: 778_rot90.png
+  label: '250'
+  query: What was the approximate number of recorded crime offences in 2019/20?
+- imagename: 778.png
+  label: '10'
+  query: How many years had crime offences above 300,000?
+- imagename: 778_rot90.png
+  label: '10'
+  query: How many years had crime offences above 300,000?
+- imagename: 3656.png
+  label: Palmeiras
+  query: Which team had the highest revenue in 2018?
+- imagename: 3656_rot90.png
+  label: Palmeiras
+  query: Which team had the highest revenue in 2018?
+- imagename: 3656.png
+  label: '550'
+  query: What was the approximate revenue of Flamengo in 2018?
+- imagename: 3656_rot90.png
+  label: '550'
+  query: What was the approximate revenue of Flamengo in 2018?
+- imagename: 3656.png
+  label: '6'
+  query: How many teams had revenue above 300 million Brazilian reals in 2018?
+- imagename: 3656_rot90.png
+  label: '6'
+  query: How many teams had revenue above 300 million Brazilian reals in 2018?
+- imagename: 3415.png
+  label: '2015'
+  query: In which year did the number of tourist arrivals first exceed 20 million?
+- imagename: 3415_rot90.png
+  label: '2015'
+  query: In which year did the number of tourist arrivals first exceed 20 million?
+- imagename: 3415.png
+  label: '27'
+  query: What was the approximate number of tourist arrivals in 2019?
+- imagename: 3415_rot90.png
+  label: '27'
+  query: What was the approximate number of tourist arrivals in 2019?
+- imagename: 3415.png
+  label: '7'
+  query: How many years had tourist arrivals below 15 million?
+- imagename: 3415_rot90.png
+  label: '7'
+  query: How many years had tourist arrivals below 15 million?
+- imagename: 3839.png
+  label: '2018'
+  query: In which year did identity fraud incidents in Canada exceed 15,000?
+- imagename: 3839_rot90.png
+  label: '2018'
+  query: In which year did identity fraud incidents in Canada exceed 15,000?
+- imagename: 3839.png
+  label: '0'
+  query: What was the approximate number of identity fraud incidents in 2008?
+- imagename: 3839_rot90.png
+  label: '0'
+  query: What was the approximate number of identity fraud incidents in 2008?
+- imagename: 3839.png
+  label: '6'
+  query: How many years had identity fraud incidents below 10,000?
+- imagename: 3839_rot90.png
+  label: '6'
+  query: How many years had identity fraud incidents below 10,000?
+- imagename: 3998.png
+  label: 2007-2008
+  query: In which year did Saskatchewan have the highest net number of interprovincial
+    migrants?
+- imagename: 3998_rot90.png
+  label: 2007-2008
+  query: In which year did Saskatchewan have the highest net number of interprovincial
+    migrants?
+- imagename: 3998.png
+  label: '-11000'
+  query: What was the approximate net number of interprovincial migrants in 2019/2020?
+- imagename: 3998_rot90.png
+  label: '-11000'
+  query: What was the approximate net number of interprovincial migrants in 2019/2020?
+- imagename: 3998.png
+  label: '13'
+  query: How many years had a net negative number of interprovincial migrants?
+- imagename: 3998_rot90.png
+  label: '13'
+  query: How many years had a net negative number of interprovincial migrants?
+- imagename: 6457.png
+  label: '2016'
+  query: In which year did the net sales of footwear exceed 1,500 million U.S. dollars?
+- imagename: 6457_rot90.png
+  label: '2016'
+  query: In which year did the net sales of footwear exceed 1,500 million U.S. dollars?
+- imagename: 6457.png
+  label: '1800'
+  query: What was the approximate net sales value of footwear in 2019?
+- imagename: 6457_rot90.png
+  label: '1800'
+  query: What was the approximate net sales value of footwear in 2019?
+- imagename: 6457.png
+  label: '3'
+  query: How many years had net sales of footwear below 1,000 million U.S. dollars?
+- imagename: 6457_rot90.png
+  label: '3'
+  query: How many years had net sales of footwear below 1,000 million U.S. dollars?
+- imagename: 1821.png
+  label: Humira
+  query: Which drug had the highest PMPY spending in 2016?
+- imagename: 1821_rot90.png
+  label: Humira
+  query: Which drug had the highest PMPY spending in 2016?
+- imagename: 1821.png
+  label: '27'
+  query: What was the approximate PMPY spending on Enbrel in 2016?
+- imagename: 1821_rot90.png
+  label: '27'
+  query: What was the approximate PMPY spending on Enbrel in 2016?
+- imagename: 1821.png
+  label: '5'
+  query: How many drugs had a PMPY spending below 10 U.S. dollars in 2016?
+- imagename: 1821_rot90.png
+  label: '5'
+  query: How many drugs had a PMPY spending below 10 U.S. dollars in 2016?
