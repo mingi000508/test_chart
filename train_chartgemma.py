@@ -345,7 +345,9 @@ config = {
     "verbose": True,
 }
 
-model_module = ChartGemmaModelPLModule(config, processor, model)
+model_module = ChartGemmaModelPLModule(
+    config, processor, model, train_dataset, val_dataset
+)
 
 from lightning.pytorch.loggers import WandbLogger
 
