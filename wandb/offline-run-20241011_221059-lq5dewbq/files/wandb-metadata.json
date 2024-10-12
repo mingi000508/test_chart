@@ -1,0 +1,260 @@
+{
+    "os": "Linux-6.8.0-40-generic-x86_64-with-glibc2.35",
+    "python": "3.10.14",
+    "heartbeatAt": "2024-10-11T13:10:59.577022",
+    "startedAt": "2024-10-11T13:10:59.458223",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/mingi/experiments/Multimodal/test_chart/train_chartgemma.py",
+    "codePathLocal": "train_chartgemma.py",
+    "codePath": "train_chartgemma.py",
+    "git": {
+        "remote": "git@github.com:mingi000508/test_chart.git",
+        "commit": "0c2766131fda518dbf64716f1ca93119ed20586f"
+    },
+    "email": "2019-16552@snu.ac.kr",
+    "root": "/home/mingi/experiments/Multimodal/test_chart",
+    "host": "bora",
+    "username": "mingi",
+    "executable": "/home/mingi/anaconda3/envs/tinyllava_factory/bin/python",
+    "cpu_count": 20,
+    "cpu_count_logical": 40,
+    "cpu_freq": {
+        "current": 1574.5104000000001,
+        "min": 1200.0,
+        "max": 3100.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3099.932,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1201.045,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.283,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2000.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2002.935,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1709.18,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2354.938,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2001.79,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1899.945,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2000.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2000.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2199.945,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.054,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.002,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2000.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 2100.052,
+            "min": 1200.0,
+            "max": 3100.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3100.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 1831.2922668457031,
+            "used": 1259.9221115112305
+        }
+    },
+    "gpu": "Tesla V100-SXM2-16GB",
+    "gpu_count": 4,
+    "gpu_devices": [
+        {
+            "name": "Tesla V100-SXM2-16GB",
+            "memory_total": 17179869184
+        },
+        {
+            "name": "Tesla V100-SXM2-16GB",
+            "memory_total": 17179869184
+        },
+        {
+            "name": "Tesla V100-SXM2-16GB",
+            "memory_total": 17179869184
+        },
+        {
+            "name": "Tesla V100-SXM2-16GB",
+            "memory_total": 17179869184
+        }
+    ],
+    "memory": {
+        "total": 251.76976013183594
+    }
+}

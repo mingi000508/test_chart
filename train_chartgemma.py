@@ -17,6 +17,8 @@ import re
 from nltk import edit_distance
 import numpy as np
 import torch.nn.functional as F
+import argparse
+from lightning.pytorch.loggers import WandbLogger
 
 
 def find_all_linear_names(model):
@@ -71,88 +73,6 @@ class ChartGemmaDataset(Dataset):
         target_sequence = sample["output"]
         input_sequence = sample["input"]
         return image, input_sequence, target_sequence
-
-
-def train_collate_fn(examples):
-    images = []
-    rot_images = []
-    input_texts = []
-    outputs_texts = []
-
-    for example in examples:
-        image, input_text, output_text = example
-        images.append(image)
-
-        # Later, 90, 180, 270 randomly?
-        rot_images.append(image.rotate(-90, expand=True))
-        input_texts.append(input_text)
-        outputs_texts.append(output_text)
-
-    # Change the MX LENGTH depending on the task.
-    MAX_LENGTH = 128
-    inputs = processor(
-        text=input_texts,
-        images=images,
-        suffix=outputs_texts,
-        return_tensors="pt",
-        padding=True,
-        truncation="only_second",
-        max_length=MAX_LENGTH,
-        # tokenize_newline_separately=False,
-    )
-
-    input_ids = inputs["input_ids"]
-    token_type_ids = inputs["token_type_ids"]
-    attention_mask = inputs["attention_mask"]
-    pixel_values = inputs["pixel_values"]
-    labels = inputs["labels"]
-
-    inputs = processor(
-        text=input_texts,
-        images=rot_images,
-        suffix=outputs_texts,
-        return_tensors="pt",
-        padding=True,
-        truncation="only_second",
-        max_length=MAX_LENGTH,
-        # tokenize_newline_separately=False,
-    )
-    rot_pixel_values = inputs["pixel_values"]
-
-    return (
-        input_ids,
-        token_type_ids,
-        attention_mask,
-        pixel_values,
-        rot_pixel_values,
-        labels,
-    )
-
-
-def eval_collate_fn(examples):
-    # we only feed the prompt to the model
-    images = []
-    texts = []
-    answers = []
-    for example in examples:
-        image, text, answer = example
-        images.append(image)
-        texts.append(text)
-        answers.append(answer)
-
-    inputs = processor(
-        text=texts,
-        images=images,
-        return_tensors="pt",
-        padding=True,
-        tokenize_newline_separately=False,
-    )
-
-    input_ids = inputs["input_ids"]
-    attention_mask = inputs["attention_mask"]
-    pixel_values = inputs["pixel_values"]
-
-    return input_ids, attention_mask, pixel_values, answers
 
 
 class ChartGemmaModelPLModule(L.LightningModule):
@@ -254,8 +174,8 @@ class ChartGemmaModelPLModule(L.LightningModule):
 
     def train_dataloader(self):
         return DataLoader(
-            train_dataset,
-            collate_fn=train_collate_fn,
+            self.train_dataset,
+            collate_fn=self.train_collate_fn,
             batch_size=self.batch_size,
             shuffle=True,
             num_workers=2,
@@ -263,106 +183,216 @@ class ChartGemmaModelPLModule(L.LightningModule):
 
     def val_dataloader(self):
         return DataLoader(
-            val_dataset,
-            collate_fn=eval_collate_fn,
+            self.val_dataset,
+            collate_fn=self.eval_collate_fn,
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=2,
         )
 
+    def train_collate_fn(self, examples):
+        images = []
+        rot_images = []
+        input_texts = []
+        outputs_texts = []
 
-USE_LORA = True
-USE_QLORA = False
+        for example in examples:
+            image, input_text, output_text = example
+            images.append(image)
+            input_text = input_text.lstrip()
+            # Later, 90, 180, 270 randomly?
+            rot_images.append(image.rotate(-90, expand=True))
+            input_texts.append(input_text)
+            outputs_texts.append(output_text)
 
-if USE_QLORA:
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.float16,
+        # Change the MX LENGTH depending on the task.
+        MAX_LENGTH = 128
+        inputs = self.processor(
+            text=input_texts,
+            images=images,
+            suffix=outputs_texts,
+            return_tensors="pt",
+            padding=True,
+            truncation="only_second",
+            max_length=MAX_LENGTH,
+            # tokenize_newline_separately=False,
+        )
+
+        input_ids = inputs["input_ids"]
+        token_type_ids = inputs["token_type_ids"]
+        attention_mask = inputs["attention_mask"]
+        pixel_values = inputs["pixel_values"]
+        labels = inputs["labels"]
+
+        inputs = self.processor(
+            text=input_texts,
+            images=rot_images,
+            suffix=outputs_texts,
+            return_tensors="pt",
+            padding=True,
+            truncation="only_second",
+            max_length=MAX_LENGTH,
+            # tokenize_newline_separately=False,
+        )
+        rot_pixel_values = inputs["pixel_values"]
+
+        return (
+            input_ids,
+            token_type_ids,
+            attention_mask,
+            pixel_values,
+            rot_pixel_values,
+            labels,
+        )
+
+    def eval_collate_fn(self, examples):
+        # we only feed the prompt to the model
+        images = []
+        texts = []
+        answers = []
+        for example in examples:
+            image, text, answer = example
+            images.append(image)
+            texts.append(text)
+            answers.append(answer)
+
+        inputs = self.processor(
+            text=texts,
+            images=images,
+            return_tensors="pt",
+            padding=True,
+            tokenize_newline_separately=False,
+        )
+
+        input_ids = inputs["input_ids"]
+        attention_mask = inputs["attention_mask"]
+        pixel_values = inputs["pixel_values"]
+
+        return input_ids, attention_mask, pixel_values, answers
+
+
+def train(args):
+    USE_LORA = True
+    USE_QLORA = False
+
+    if USE_QLORA:
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.float16,
+        )
+        model = PaliGemmaForConditionalGeneration.from_pretrained(
+            "ahmed-masry/chartgemma",
+            torch_dtype=torch.float16,
+            quantization_config=bnb_config,
+        )
+    elif USE_LORA:
+        model = PaliGemmaForConditionalGeneration.from_pretrained(
+            "ahmed-masry/chartgemma",
+            torch_dtype=torch.float16,
+        )
+    else:
+        # for full fine-tuning, we can speed up the model using Flash Attention
+        # only available on certain devices, see https://github.com/Dao-AILab/flash-attention?tab=readme-ov-file#installation-and-features
+        model = PaliGemmaForConditionalGeneration.from_pretrained(
+            "ahmed-masry/chartgemma",
+            torch_dtype=torch.float16,
+            _attn_implementation="flash_attention_2",
+        )
+        for param in model.vision_tower.parameters():
+            param.requires_grad = False
+
+        for param in model.multi_modal_projector.parameters():
+            param.requires_grad = False
+
+    lora_config = LoraConfig(
+        r=8,
+        target_modules=[
+            "q_proj",
+            "o_proj",
+            "k_proj",
+            "v_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+        ],
+        task_type="CAUSAL_LM",
     )
-    model = PaliGemmaForConditionalGeneration.from_pretrained(
-        "ahmed-masry/chartgemma",
-        torch_dtype=torch.float16,
-        quantization_config=bnb_config,
+
+    model = prepare_model_for_kbit_training(model)
+    model = get_peft_model(model, lora_config)
+
+    processor = AutoProcessor.from_pretrained("ahmed-masry/chartgemma")
+
+    train_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
+    val_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
+
+    config = {
+        "max_epochs": args.max_epochs,
+        # "val_check_interval": 0.2, # how many times we want to validate during an epoch
+        "check_val_every_n_epoch": None,
+        "gradient_clip_val": 1.0,
+        "accumulate_grad_batches": args.accumulate_grad_batches,
+        "lr": 1e-4,
+        "batch_size": 1,
+        # "seed":2022,
+        "num_nodes": 1,
+        "warmup_steps": 50,
+        "result_path": "./result",
+        "verbose": True,
+    }
+
+    model_module = ChartGemmaModelPLModule(
+        config, processor, model, train_dataset, val_dataset
     )
-elif USE_LORA:
-    model = PaliGemmaForConditionalGeneration.from_pretrained(
-        "ahmed-masry/chartgemma",
-        torch_dtype=torch.float16,
+
+    wandb_logger = WandbLogger(project="chartgemma", name="KL_base")
+
+    trainer = L.Trainer(
+        accelerator="gpu",
+        devices=[0],
+        max_epochs=config.get("max_epochs"),
+        accumulate_grad_batches=config.get("accumulate_grad_batches"),
+        check_val_every_n_epoch=config.get("check_val_every_n_epoch"),
+        gradient_clip_val=config.get("gradient_clip_val"),
+        precision="16-mixed",
+        num_sanity_val_steps=0,
+        logger=wandb_logger,
     )
-else:
-    # for full fine-tuning, we can speed up the model using Flash Attention
-    # only available on certain devices, see https://github.com/Dao-AILab/flash-attention?tab=readme-ov-file#installation-and-features
-    model = PaliGemmaForConditionalGeneration.from_pretrained(
-        "ahmed-masry/chartgemma",
-        torch_dtype=torch.float16,
-        _attn_implementation="flash_attention_2",
+
+    trainer.fit(model_module)
+
+    model_module.model.save_pretrained(args.trained_model)
+    model_module.processor.save_pretrained(args.trained_model)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max_epochs", type=int, default=2)
+    parser.add_argument("--accumulate_grad_batches", type=int, default=8)
+    parser.add_argument("--trained_model", type=str, default="trained_model")
+    parser.add_argument("--question-file", type=str, default="tables/question.jsonl")
+    parser.add_argument("--answers-file", type=str, default="answer.jsonl")
+    parser.add_argument("--conv-mode", type=str, default="llama")
+    parser.add_argument("--num-chunks", type=int, default=1)
+    parser.add_argument("--chunk-idx", type=int, default=0)
+    parser.add_argument("--temperature", type=float, default=0.2)
+    parser.add_argument("--top_p", type=float, default=None)
+    parser.add_argument("--num_beams", type=int, default=1)
+    parser.add_argument("--max_new_tokens", type=int, default=128)
+    parser.add_argument("--image_aspect_ratio", type=str, default="pad")
+    parser.add_argument("--new_line_emb", action="store_true")
+    parser.add_argument("--num_line_embs", type=int, default=1)
+    parser.add_argument("--exclude_outliers", action="store_true")
+    parser.add_argument(
+        "--indices_file",
+        type=str,
+        default="tinyllava/experiments3/ve_outlier_indices.json",
     )
-    for param in model.vision_tower.parameters():
-        param.requires_grad = False
+    parser.add_argument("--cali_layer", type=int, default=None)
+    parser.add_argument("--alpha", type=float, default=0.8)
+    parser.add_argument("--cali_mode", type=str, default=None)
 
-    for param in model.multi_modal_projector.parameters():
-        param.requires_grad = False
+    args = parser.parse_args()
 
-lora_config = LoraConfig(
-    r=8,
-    target_modules=[
-        "q_proj",
-        "o_proj",
-        "k_proj",
-        "v_proj",
-        "gate_proj",
-        "up_proj",
-        "down_proj",
-    ],
-    task_type="CAUSAL_LM",
-)
-
-model = prepare_model_for_kbit_training(model)
-model = get_peft_model(model, lora_config)
-
-processor = AutoProcessor.from_pretrained("ahmed-masry/chartgemma")
-
-train_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
-val_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
-
-config = {
-    "max_epochs": 2,
-    # "val_check_interval": 0.2, # how many times we want to validate during an epoch
-    "check_val_every_n_epoch": None,
-    "gradient_clip_val": 1.0,
-    "accumulate_grad_batches": 8,
-    "accumulate_grad_batches": 1,
-    "lr": 1e-4,
-    "batch_size": 1,
-    # "seed":2022,
-    "num_nodes": 1,
-    "warmup_steps": 50,
-    "result_path": "./result",
-    "verbose": True,
-}
-
-model_module = ChartGemmaModelPLModule(
-    config, processor, model, train_dataset, val_dataset
-)
-
-from lightning.pytorch.loggers import WandbLogger
-
-wandb_logger = WandbLogger(project="chartgemma", name="KL_base")
-
-trainer = L.Trainer(
-    accelerator="gpu",
-    devices=[0],
-    max_epochs=config.get("max_epochs"),
-    accumulate_grad_batches=config.get("accumulate_grad_batches"),
-    check_val_every_n_epoch=config.get("check_val_every_n_epoch"),
-    gradient_clip_val=config.get("gradient_clip_val"),
-    precision="16-mixed",
-    num_sanity_val_steps=0,
-    logger=wandb_logger,
-)
-
-trainer.fit(model_module)
-
-model_module.model.save_pretrained("trained_model")
-model_module.processor.save_pretrained("trained_model")
+    train(args)
