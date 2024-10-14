@@ -76,7 +76,9 @@ class ChartGemmaDataset(Dataset):
 
 
 class ChartGemmaModelPLModule(L.LightningModule):
-    def __init__(self, config, processor, model, train_dataset, val_dataset):
+    def __init__(
+        self, config, processor, model, train_dataset, val_dataset, alpha, max_length
+    ):
         super().__init__()
         self.config = config
         self.processor = processor
@@ -84,6 +86,8 @@ class ChartGemmaModelPLModule(L.LightningModule):
         self.batch_size = config.get("batch_size")
         self.train_dataset = train_dataset
         self.val_dataset = val_dataset
+        self.alpha = alpha
+        self.max_length = max_length
 
     def training_step(self, batch, batch_idx):
 
@@ -119,7 +123,7 @@ class ChartGemmaModelPLModule(L.LightningModule):
         kl_loss = F.kl_div(logit_soft, rot_logit_soft, reduction="batchmean")
 
         # loss weight is default 1:1
-        loss = loss + kl_loss
+        loss = self.alpha * loss + (1.0 - self.alpha) * kl_loss
 
         self.log("train_loss", loss)
 
@@ -206,7 +210,7 @@ class ChartGemmaModelPLModule(L.LightningModule):
             outputs_texts.append(output_text)
 
         # Change the MX LENGTH depending on the task.
-        MAX_LENGTH = 128
+        MAX_LENGTH = self.max_length
         inputs = self.processor(
             text=input_texts,
             images=images,
@@ -343,7 +347,13 @@ def train(args):
     }
 
     model_module = ChartGemmaModelPLModule(
-        config, processor, model, train_dataset, val_dataset
+        config,
+        processor,
+        model,
+        train_dataset,
+        val_dataset,
+        args.alpha,
+        args.max_length,
     )
 
     wandb_logger = WandbLogger(project="chartgemma", name="KL_base")
@@ -371,27 +381,8 @@ if __name__ == "__main__":
     parser.add_argument("--max_epochs", type=int, default=2)
     parser.add_argument("--accumulate_grad_batches", type=int, default=8)
     parser.add_argument("--trained_model", type=str, default="trained_model")
-    parser.add_argument("--question-file", type=str, default="tables/question.jsonl")
-    parser.add_argument("--answers-file", type=str, default="answer.jsonl")
-    parser.add_argument("--conv-mode", type=str, default="llama")
-    parser.add_argument("--num-chunks", type=int, default=1)
-    parser.add_argument("--chunk-idx", type=int, default=0)
-    parser.add_argument("--temperature", type=float, default=0.2)
-    parser.add_argument("--top_p", type=float, default=None)
-    parser.add_argument("--num_beams", type=int, default=1)
-    parser.add_argument("--max_new_tokens", type=int, default=128)
-    parser.add_argument("--image_aspect_ratio", type=str, default="pad")
-    parser.add_argument("--new_line_emb", action="store_true")
-    parser.add_argument("--num_line_embs", type=int, default=1)
-    parser.add_argument("--exclude_outliers", action="store_true")
-    parser.add_argument(
-        "--indices_file",
-        type=str,
-        default="tinyllava/experiments3/ve_outlier_indices.json",
-    )
-    parser.add_argument("--cali_layer", type=int, default=None)
-    parser.add_argument("--alpha", type=float, default=0.8)
-    parser.add_argument("--cali_mode", type=str, default=None)
+    parser.add_argument("--alpha", type=float, default=0.5)
+    parser.add_argument("--max_length", type=int, default=128)
 
     args = parser.parse_args()
 
