@@ -347,7 +347,7 @@ def train(args):
         "check_val_every_n_epoch": None,
         "gradient_clip_val": 1.0,
         "accumulate_grad_batches": args.accumulate_grad_batches,
-        "lr": 1e-4,
+        "lr": args.lr,
         "batch_size": 1,
         # "seed":2022,
         "num_nodes": 1,
@@ -394,6 +394,7 @@ if __name__ == "__main__":
     parser.add_argument("--alpha", type=float, default=0.5)
     parser.add_argument("--max_length", type=int, default=128)
     parser.add_argument("--subset_size", type=int, default=20000)
+    parser.add_argument("--lr", type=float, default=2e-5)
 
     args = parser.parse_args()
 
