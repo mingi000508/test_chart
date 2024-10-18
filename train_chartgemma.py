@@ -19,6 +19,8 @@ import numpy as np
 import torch.nn.functional as F
 import argparse
 from lightning.pytorch.loggers import WandbLogger
+from torch.utils.data import Subset
+import random
 
 
 def find_all_linear_names(model):
@@ -331,6 +333,14 @@ def train(args):
     train_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
     val_dataset = ChartGemmaDataset("ahmed-masry/ChartGemma", split="train")
 
+    dataset_size = len(train_dataset)
+    subset_size = args.subset_size
+
+    random_indices = random.sample(range(dataset_size), subset_size)
+
+    train_dataset = Subset(train_dataset, random_indices)
+    val_dataset = Subset(val_dataset, [0])
+
     config = {
         "max_epochs": args.max_epochs,
         # "val_check_interval": 0.2, # how many times we want to validate during an epoch
@@ -383,6 +393,7 @@ if __name__ == "__main__":
     parser.add_argument("--trained_model", type=str, default="trained_model")
     parser.add_argument("--alpha", type=float, default=0.5)
     parser.add_argument("--max_length", type=int, default=128)
+    parser.add_argument("--subset_size", type=int, default=20000)
 
     args = parser.parse_args()
 
